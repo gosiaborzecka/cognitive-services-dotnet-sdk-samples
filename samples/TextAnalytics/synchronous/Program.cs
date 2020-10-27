@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ * Licensed under the MIT License. See License.txt in the project root for
+ * license information.
+*/
+
 // <imports>
 using System;
 using System.Collections.Generic;
@@ -14,46 +20,38 @@ namespace text_analytics_quickstart
     class Program
     {
         // <vars>
-        private const string key_var = "TEXT_ANALYTICS_SUBSCRIPTION_KEY";
-        private static readonly string subscriptionKey = Environment.GetEnvironmentVariable(key_var);
-
-        private const string endpoint_var = "TEXT_ANALYTICS_ENDPOINT";
-        private static readonly string endpoint = Environment.GetEnvironmentVariable(endpoint_var);
+        private static readonly string key = "<paste-your-text-analytics-key-here>";
+        private static readonly string endpoint = "<paste-your-text-analytics-endpoint-here>";
         // </vars>
 
-        static Program()
+        // <authentication>
+        static TextAnalyticsClient authenticateClient()
         {
-            if (null == subscriptionKey)
-            {
-                throw new Exception("Please set/export the environment variable: " + key_var);
-            }
-            if (null == endpoint)
-            {
-                throw new Exception("Please set/export the environment variable: " + endpoint_var);
-            }
-        }
-
-        // <main>
-        static void Main(string[] args)
-        {
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-            var credentials = new ApiKeyServiceClientCredentials(subscriptionKey);
+            ApiKeyServiceClientCredentials credentials = new ApiKeyServiceClientCredentials(key);
             TextAnalyticsClient client = new TextAnalyticsClient(credentials)
             {
                 Endpoint = endpoint
             };
+            return client;
+        }
+        // </authentication>
 
-            SentimentAnalysisExample(client);
+        // <main>
+        static void Main(string[] args)
+        {
+            var client = authenticateClient();
+
+            sentimentAnalysisExample(client);
             languageDetectionExample(client);
             entityRecognitionExample(client);
-            KeyPhraseExtractionExample(client);
+            keyPhraseExtractionExample(client);
             Console.Write("Press any key to exit.");
             Console.ReadKey();
         }
         // </main>
 
         // <sentiment>
-        static void SentimentAnalysisExample(ITextAnalyticsClient client)
+        static void sentimentAnalysisExample(ITextAnalyticsClient client)
         {
             var result = client.Sentiment("I had the best day of my life.", "en");
             Console.WriteLine($"Sentiment Score: {result.Score:0.00}");
@@ -86,7 +84,7 @@ namespace text_analytics_quickstart
         // </entityRecognition>
 
         // <keyPhraseExtraction>
-        static void KeyPhraseExtractionExample(TextAnalyticsClient client)
+        static void keyPhraseExtractionExample(TextAnalyticsClient client)
         {
             var result = client.KeyPhrases("My cat might need to see a veterinarian.");
 

@@ -9,9 +9,10 @@ using System.Threading;
 
 namespace ObjectDetection
 {
+
     class Program
     {
-        
+
         static void Main(string[] args)
         {
             // Add your Azure Custom Vision endpoint to your environment variables.
@@ -25,14 +26,13 @@ namespace ObjectDetection
             string predictionKey = Environment.GetEnvironmentVariable("CUSTOM_VISION_PREDICTION_KEY");
             // </snippet_keys>
 
+            // <snippet_create>
             // Create the Api, passing in the training key
-            CustomVisionTrainingClient trainingApi = new CustomVisionTrainingClient()
+            CustomVisionTrainingClient trainingApi = new CustomVisionTrainingClient(new Microsoft.Azure.CognitiveServices.Vision.CustomVision.Training.ApiKeyServiceClientCredentials(trainingKey))
             {
-                ApiKey = trainingKey,
                 Endpoint = ENDPOINT
             };
 
-            // <snippet_create>
             // Find the object detection domain
             var domains = trainingApi.GetDomains();
             var objDetectionDomain = domains.FirstOrDefault(d => d.Type == "ObjectDetection");
@@ -144,9 +144,8 @@ namespace ObjectDetection
 
             // <snippet_prediction_endpoint>
             // Create a prediction endpoint, passing in the obtained prediction key
-            CustomVisionPredictionClient endpoint = new CustomVisionPredictionClient()
+            CustomVisionPredictionClient endpoint = new CustomVisionPredictionClient(new Microsoft.Azure.CognitiveServices.Vision.CustomVision.Prediction.ApiKeyServiceClientCredentials(predictionKey))
             {
-                ApiKey = predictionKey,
                 Endpoint = ENDPOINT
             };
             // </snippet_prediction_endpoint>
@@ -157,7 +156,7 @@ namespace ObjectDetection
             var imageFile = Path.Combine("Images", "test", "test_image.jpg");
             using (var stream = File.OpenRead(imageFile))
             {
-                var result = endpoint.DetectImage(project.Id, publishedModelName, File.OpenRead(imageFile));
+                var result = endpoint.DetectImage(project.Id, publishedModelName, stream);
 
                 // Loop over each prediction and write out the results
                 foreach (var c in result.Predictions)

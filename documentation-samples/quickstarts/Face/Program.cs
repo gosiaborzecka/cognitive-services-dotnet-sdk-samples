@@ -199,6 +199,7 @@ namespace FaceQuickstart
 
 				Console.WriteLine($"{detectedFaces.Count} face(s) detected from image `{imageFileName}`.");
 				// </snippet_detect>
+				// <snippet_detect_parse>
 				// Parse and print all attributes of each detected face.
 				foreach (var face in detectedFaces)
 				{
@@ -267,6 +268,7 @@ namespace FaceQuickstart
 				}
 			}
 		}
+		// </snippet_detect_parse>
 
 		// Detect faces from image url for recognition purpose. This is a helper method for other functions in this quickstart.
 		// Parameter `returnFaceId` of `DetectWithUrlAsync` must be set to `true` (by default) for recognition purpose.
@@ -398,12 +400,12 @@ namespace FaceQuickstart
 		 * a list of Person objects that each face might belong to. Returned Person objects are wrapped as Candidate objects, 
 		 * which have a prediction confidence value.
 		 */
+		// <snippet_persongroup_files>
 		public static async Task IdentifyInPersonGroup(IFaceClient client, string url, string recognitionModel)
 		{
 			Console.WriteLine("========IDENTIFY FACES========");
 			Console.WriteLine();
 
-			// <snippet_persongroup_files>
 			// Create a dictionary for all your images, grouping similar ones under the same key.
 			Dictionary<string, string[]> personDictionary =
 				new Dictionary<string, string[]>
@@ -477,8 +479,9 @@ namespace FaceQuickstart
 					$" confidence: {identifyResult.Candidates[0].Confidence}.");
 			}
 			Console.WriteLine();
-			// </snippet_identify>
 		}
+		// </snippet_identify>
+
 		/*
 		 * END - IDENTIFY FACES
 		 */
